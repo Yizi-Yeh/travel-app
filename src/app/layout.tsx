@@ -4,6 +4,8 @@ import { ThemeRegistry } from "@/components/ThemeRegistry";
 export const metadata: Metadata = {
   title: "Japan Trip PWA",
   description: "Japan trip planner",
+  manifest: "/manifest.json",
+  themeColor: "#0f2b2a",
 };
 
 export default function RootLayout({
