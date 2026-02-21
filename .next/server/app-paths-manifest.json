@@ -1,0 +1,7 @@
+{
+  "/trip/period/page": "app/trip/period/page.js",
+  "/trip/checklist/page": "app/trip/checklist/page.js",
+  "/page": "app/page.js",
+  "/trip/insurance/page": "app/trip/insurance/page.js",
+  "/trip/shopping/page": "app/trip/shopping/page.js"
+}

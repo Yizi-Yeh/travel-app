@@ -15,7 +15,7 @@ export default async function HomePage() {
 
   if (!isAuthenticated) {
     return (
-      <AppShell title="Japan Trip PWA" isAuthenticated={false}>
+      <AppShell title="旅遊總表" isAuthenticated={false}>
         <HomeContent isAuthenticated={false} trips={[]} />
       </AppShell>
     );
@@ -38,7 +38,7 @@ export default async function HomePage() {
   }));
 
   return (
-    <AppShell title="Japan Trip PWA" isAuthenticated={true}>
+    <AppShell title="旅遊總表" isAuthenticated={true}>
       <HomeContent isAuthenticated={true} trips={tripCards} />
     </AppShell>
   );
