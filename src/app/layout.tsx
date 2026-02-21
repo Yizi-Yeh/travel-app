@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ThemeRegistry } from "@/components/ThemeRegistry";
 
 export const metadata: Metadata = {
   title: "Japan Trip PWA",
@@ -12,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-Hant">
-      <body>{children}</body>
+      <body>
+        <ThemeRegistry>{children}</ThemeRegistry>
+      </body>
     </html>
   );
 }
