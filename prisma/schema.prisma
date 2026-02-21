@@ -1,0 +1,350 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TripRole {
+  OWNER
+  MEMBER
+}
+
+enum TodoStatus {
+  PENDING
+  DONE
+}
+
+enum TodoCategory {
+  PRE_TRIP
+  IN_TRIP
+  POST_TRIP
+}
+
+enum FlightDirection {
+  OUTBOUND
+  RETURN
+}
+
+enum TransportType {
+  SKYLINER
+  JR
+  SUBWAY
+  OTHER
+}
+
+enum InternetType {
+  ESIM
+  WIFI
+  OTHER
+}
+
+enum ExpenseType {
+  TRANSPORT
+  ACCOMMODATION
+  FOOD
+  SHOPPING
+  OTHER
+}
+
+enum AttachmentOwnerType {
+  FLIGHT
+  TRANSPORT
+  ACCOMMODATION
+  INTERNET
+  ENTRY_QRCODE
+  INSURANCE
+  COUPON
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  trips         TripMember[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Trip {
+  id          String       @id @default(cuid())
+  name        String
+  notes       String?
+  members     TripMember[]
+  period      TripPeriod?
+  itineraryDays ItineraryDay[]
+  todos       Todo[]
+  flights     Flight[]
+  transports  Transport[]
+  accommodations Accommodation[]
+  internetPlans InternetPlan[]
+  entryQRCodes EntryQRCode[]
+  insurances  Insurance[]
+  expenses    Expense[]
+  checklistItems ChecklistItem[]
+  shoppingItems ShoppingItem[]
+  coupons     Coupon[]
+  attachments Attachment[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TripMember {
+  id        String   @id @default(cuid())
+  tripId    String
+  userId    String
+  role      TripRole
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tripId, userId])
+}
+
+model TripPeriod {
+  id        String   @id @default(cuid())
+  tripId    String   @unique
+  startDate DateTime
+  endDate   DateTime
+  members   String?
+  notes     String?
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ItineraryDay {
+  id        String         @id @default(cuid())
+  tripId    String
+  date      DateTime
+  notes     String?
+  expenseTotal Int?
+  items     ItineraryItem[]
+  trip      Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([tripId, date])
+}
+
+model ItineraryItem {
+  id          String   @id @default(cuid())
+  dayId       String
+  time        String?
+  place       String?
+  description String?
+  transport   String?
+  bookingInfo String?
+  day         ItineraryDay @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Todo {
+  id          String      @id @default(cuid())
+  tripId      String
+  title       String
+  status      TodoStatus @default(PENDING)
+  dueDate     DateTime?
+  relatedType String?
+  relatedId   String?
+  category    TodoCategory?
+  trip        Trip        @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Flight {
+  id          String          @id @default(cuid())
+  tripId      String
+  direction   FlightDirection
+  airline     String?
+  flightNo    String?
+  depAirport  String?
+  arrAirport  String?
+  depTime     DateTime?
+  arrTime     DateTime?
+  notes       String?
+  trip        Trip            @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Transport {
+  id            String        @id @default(cuid())
+  tripId        String
+  type          TransportType @default(OTHER)
+  segment       String?
+  schedule      String?
+  transferNotes String?
+  trip          Trip          @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Accommodation {
+  id        String   @id @default(cuid())
+  tripId    String
+  name      String
+  address   String?
+  checkIn   DateTime?
+  checkOut  DateTime?
+  room      String?
+  wifiSsid  String?
+  wifiPass  String?
+  phone     String?
+  notes     String?
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InternetPlan {
+  id          String       @id @default(cuid())
+  tripId      String
+  type        InternetType @default(OTHER)
+  startDate   DateTime?
+  usage       String?
+  contacts    String?
+  notes       String?
+  trip        Trip         @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model EntryQRCode {
+  id           String   @id @default(cuid())
+  tripId       String
+  label        String?
+  attachmentId String?
+  trip         Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Insurance {
+  id          String   @id @default(cuid())
+  tripId      String
+  company     String?
+  planName    String?
+  policyNo    String?
+  startDate   DateTime?
+  endDate     DateTime?
+  insured     String?
+  coverage    String?
+  contacts    String?
+  notes       String?
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Expense {
+  id          String      @id @default(cuid())
+  tripId      String
+  type        ExpenseType @default(OTHER)
+  amount      Decimal     @db.Decimal(12, 2)
+  currency    String
+  date        DateTime
+  itineraryDayId String?
+  notes       String?
+  trip        Trip        @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ChecklistItem {
+  id        String   @id @default(cuid())
+  tripId    String
+  category  String
+  title     String
+  checked   Boolean  @default(false)
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ShoppingItem {
+  id        String   @id @default(cuid())
+  tripId    String
+  name      String
+  category  String?
+  price     Decimal? @db.Decimal(12, 2)
+  place     String?
+  purchased Boolean  @default(false)
+  notes     String?
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Coupon {
+  id        String   @id @default(cuid())
+  tripId    String
+  title     String
+  store     String?
+  conditions String?
+  expiry    DateTime?
+  notes     String?
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Attachment {
+  id        String              @id @default(cuid())
+  tripId    String
+  ownerType AttachmentOwnerType
+  ownerId   String
+  name      String
+  mime      String
+  size      Int
+  blob      Bytes
+  trip      Trip                @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tripId])
+  @@index([ownerType, ownerId])
+}
