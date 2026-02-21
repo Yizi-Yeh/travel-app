@@ -40,7 +40,11 @@ export async function PATCH(req: Request, { params }: { params: { tripId: string
   }
 
   const body = await req.json();
-  const trip = await updateTrip(member.userId, params.tripId, { name: body.name, notes: body.notes });
+  const trip = await updateTrip(member.userId, params.tripId, {
+    name: body.name,
+    location: body.location,
+    notes: body.notes,
+  });
   return NextResponse.json({ data: trip });
 }
 

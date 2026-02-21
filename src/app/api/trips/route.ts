@@ -12,6 +12,7 @@ export async function GET() {
 
   const trips = await prisma.trip.findMany({
     where: { members: { some: { user: { email: session.user.email } } } },
+    include: { period: true },
     orderBy: { updatedAt: "desc" },
   });
 
@@ -30,6 +31,10 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json();
-  const trip = await createTrip(user.id, { name: body.name, notes: body.notes });
+  const trip = await createTrip(user.id, {
+    name: body.name,
+    location: body.location,
+    notes: body.notes,
+  });
   return NextResponse.json({ data: trip });
 }

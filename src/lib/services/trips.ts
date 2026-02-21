@@ -8,11 +8,15 @@ export function validateTripName(name: string) {
   }
 }
 
-export async function createTrip(userId: string, data: { name: string; notes?: string | null }) {
+export async function createTrip(
+  userId: string,
+  data: { name: string; location?: string | null; notes?: string | null }
+) {
   validateTripName(data.name);
   return prisma.trip.create({
     data: {
       name: data.name,
+      location: data.location ?? null,
       notes: data.notes ?? null,
       members: {
         create: [{ userId, role: "OWNER" }],
@@ -21,7 +25,11 @@ export async function createTrip(userId: string, data: { name: string; notes?: s
   });
 }
 
-export async function updateTrip(userId: string, tripId: string, data: { name?: string; notes?: string | null }) {
+export async function updateTrip(
+  userId: string,
+  tripId: string,
+  data: { name?: string; location?: string | null; notes?: string | null }
+) {
   const member = await prisma.tripMember.findUnique({
     where: { tripId_userId: { tripId, userId } },
   });
@@ -33,6 +41,7 @@ export async function updateTrip(userId: string, tripId: string, data: { name?: 
     where: { id: tripId },
     data: {
       name: data.name,
+      location: data.location ?? undefined,
       notes: data.notes ?? undefined,
     },
   });
