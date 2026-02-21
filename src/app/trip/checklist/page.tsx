@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const checklistTitle = "出國物品清單";
-
-export default function ChecklistPage() {
-  return <ModulePage module="checklist" />;
+export default function Page() {
+  return <TripModuleShell module="checklist" />;
 }

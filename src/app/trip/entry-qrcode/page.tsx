@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const entryQrcodeTitle = "入境 QR Code";
-
-export default function EntryQrCodePage() {
-  return <ModulePage module="entry-qrcode" />;
+export default function Page() {
+  return <TripModuleShell module="entry-qrcode" />;
 }

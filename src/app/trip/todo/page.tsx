@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const todoTitle = "待辦事項";
-
-export default function TodoPage() {
-  return <ModulePage module="todo" />;
+export default function Page() {
+  return <TripModuleShell module="todo" />;
 }

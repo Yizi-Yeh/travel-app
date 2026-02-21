@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const insuranceTitle = "旅平險管理";
-
-export default function InsurancePage() {
-  return <ModulePage module="insurance" />;
+export default function Page() {
+  return <TripModuleShell module="insurance" />;
 }

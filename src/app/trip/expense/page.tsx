@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const expenseTitle = "費用管理";
-
-export default function ExpensePage() {
-  return <ModulePage module="expense" />;
+export default function Page() {
+  return <TripModuleShell module="expense" />;
 }

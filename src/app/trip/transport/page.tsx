@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const transportTitle = "交通資訊";
-
-export default function TransportPage() {
-  return <ModulePage module="transport" />;
+export default function Page() {
+  return <TripModuleShell module="transport" />;
 }

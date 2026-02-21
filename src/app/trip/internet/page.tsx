@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const internetTitle = "網路管理";
-
-export default function InternetPage() {
-  return <ModulePage module="internet" />;
+export default function Page() {
+  return <TripModuleShell module="internet" />;
 }

@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const periodTitle = "旅遊期間";
-
-export default function PeriodPage() {
-  return <ModulePage module="period" />;
+export default function Page() {
+  return <TripModuleShell module="period" />;
 }

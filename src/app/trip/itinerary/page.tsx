@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const itineraryTitle = "每日行程";
-
-export default function ItineraryPage() {
-  return <ModulePage module="itinerary" />;
+export default function Page() {
+  return <TripModuleShell module="itinerary" />;
 }

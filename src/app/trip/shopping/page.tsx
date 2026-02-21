@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const shoppingTitle = "要買的東西";
-
-export default function ShoppingPage() {
-  return <ModulePage module="shopping" />;
+export default function Page() {
+  return <TripModuleShell module="shopping" />;
 }

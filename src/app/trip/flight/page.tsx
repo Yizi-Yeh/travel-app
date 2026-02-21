@@ -1,7 +1,5 @@
-import { ModulePage } from "@/components/modules/ModulePage";
+import { TripModuleShell } from "@/components/modules/TripModuleShell";
 
-export const flightTitle = "航班資訊";
-
-export default function FlightPage() {
-  return <ModulePage module="flight" />;
+export default function Page() {
+  return <TripModuleShell module="flight" />;
 }

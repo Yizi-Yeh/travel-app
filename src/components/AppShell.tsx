@@ -89,7 +89,9 @@ export function AppShell({
             {drawer}
           </Drawer>
         )}
-        <Box sx={{ flexGrow: 1, p: 2 }}>{children}</Box>
+        <Box sx={{ flexGrow: 1, p: { xs: 2, md: 3 } }}>
+          <Box sx={{ maxWidth: 1200, mx: "auto", width: "100%" }}>{children}</Box>
+        </Box>
       </Box>
     </Box>
   );
