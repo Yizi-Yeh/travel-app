@@ -4,6 +4,7 @@ import { authConfig } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getModuleConfig, type ModuleName } from "@/lib/modules/registry";
 import { validateRequiredFields } from "@/lib/modules/validators";
+import { buildScopedWhere, sanitizeUpdatePayload } from "@/lib/modules/guards";
 
 const prismaModelMap: Record<ModuleName, keyof typeof prisma> = {
   period: "tripPeriod",
@@ -88,9 +89,16 @@ export async function PATCH(req: Request, { params }: { params: { tripId: string
   }
 
   const model = prismaModelMap[params.module];
+  const record = await (prisma[model] as any).findFirst({
+    where: buildScopedWhere(body.id, params.tripId),
+  });
+  if (!record) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   const updated = await (prisma[model] as any).update({
     where: { id: body.id },
-    data: { ...body },
+    data: sanitizeUpdatePayload(body),
   });
 
   return NextResponse.json({ data: updated });
@@ -113,6 +121,13 @@ export async function DELETE(req: Request, { params }: { params: { tripId: strin
   }
 
   const model = prismaModelMap[params.module];
+  const record = await (prisma[model] as any).findFirst({
+    where: buildScopedWhere(body.id, params.tripId),
+  });
+  if (!record) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   await (prisma[model] as any).delete({ where: { id: body.id } });
 
   return NextResponse.json({ ok: true });

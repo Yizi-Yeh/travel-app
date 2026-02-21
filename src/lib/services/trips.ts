@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { canManageMembers } from "@/lib/authz";
+import { canRemoveMember } from "@/lib/services/owners";
 
 export function validateTripName(name: string) {
   if (!name.trim()) {
@@ -27,7 +28,7 @@ export async function updateTrip(userId: string, tripId: string, data: { name?: 
   if (!member) {
     throw new Error("Forbidden");
   }
-  if (data.name) validateTripName(data.name);
+  if (data.name !== undefined) validateTripName(data.name);
   return prisma.trip.update({
     where: { id: tripId },
     data: {
@@ -69,6 +70,14 @@ export async function removeMember(ownerId: string, tripId: string, memberId: st
   });
   if (!owner || !canManageMembers(owner.role)) {
     throw new Error("Forbidden");
+  }
+  const target = await prisma.tripMember.findUnique({ where: { id: memberId } });
+  if (!target || target.tripId != tripId) {
+    throw new Error("Not found");
+  }
+  const ownersCount = await prisma.tripMember.count({ where: { tripId, role: "OWNER" } });
+  if (!canRemoveMember({ targetRole: target.role, ownersCount })) {
+    throw new Error("Cannot remove last owner");
   }
   return prisma.tripMember.delete({ where: { id: memberId } });
 }
