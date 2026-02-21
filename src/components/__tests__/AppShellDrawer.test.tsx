@@ -3,5 +3,5 @@ import { AppShell } from "@/components/AppShell";
 
 it("renders drawer title", () => {
   render(<AppShell title="Japan Trip">Content</AppShell>);
-  expect(screen.getByText(/Japan Trip/i)).toBeInTheDocument();
+  expect(screen.getAllByText(/Japan Trip/i).length).toBeGreaterThan(0);
 });

@@ -1,7 +1,7 @@
-\"use client\";
+"use client";
 
-import { useState } from \"react\";
-import MenuIcon from \"@mui/icons-material/Menu\";
+import { useState } from "react";
+import MenuIcon from "@mui/icons-material/Menu";
 import {
   AppBar,
   Box,
@@ -12,7 +12,7 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-} from \"@mui/material\";
+} from "@mui/material";
 import { TripSwitcher } from "@/components/TripSwitcher";
 import { SyncStatus } from "@/components/SyncStatus";
 import { AuthButton } from "@/components/AuthButton";
